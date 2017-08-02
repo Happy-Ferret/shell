@@ -63,25 +63,27 @@ var WindowManager = {
    */
   handleOpenWindow: function(e) {
     // Check for a site ID in the features property
-    if(e.detail && e.detail.features) {
+    /*if(e.features) {
       var siteId = null;
-      var features = e.detail.features.split(',');
+      var features = e.features.split(',');
       features.forEach(function(feature) {
         if (feature.startsWith('siteId=')) {
           siteId = feature.substr(7);
         }
       });
-    }
+    }*/
     // If there's a siteId then generate window from Site in Places
-    if (siteId) {
-      Places.getSite(siteId).then((function(siteObject) {
+    if (e.detail && e.detail.options && e.detail.options.siteId) {
+      this.createWindow(this.WINDOW_TYPES['standalone'], e.detail.url, null);
+      // TODO: Replace with call to a places web service in home app
+      /*Places.getSite(siteId).then((function(siteObject) {
         // Use window type from siteObject or fall back to browser window
         this.createWindow(this.WINDOW_TYPES[siteObject.display] ||
           this.WINDOW_TYPES['browser'], e.detail.url, siteObject);
       }).bind(this)).catch((function(e) {
         console.error('Failed to get site object to open window ' + e);
         this.createWindow(this.WINDOW_TYPES.browser, e.detail.url);
-      }).bind(this));
+      }).bind(this));*/
     // Otherwise create a generic browser window
     } else if (e.detail && e.detail.url) {
       this.createWindow(this.WINDOW_TYPES.browser, e.detail.url);
